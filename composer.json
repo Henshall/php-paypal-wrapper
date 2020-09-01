@@ -1,0 +1,20 @@
+{
+    "name": "henshall/php-paypal-wrapper",
+    "description": "Simple Paypal wrapper used to make purchases, with lots of examples",
+    "type": "Library",
+    "lisence": "MIT",
+    "authors": [{
+        "name": "wes",
+        "email": "weshenshall@gmail.com"
+    }],
+    "minimum-stability": "dev",
+    "require": {
+        "paypal/rest-api-sdk-php": "^1.13",
+        "illuminate/session": "7.x-dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Henshall\\": "src/"
+        }
+    }
+}
