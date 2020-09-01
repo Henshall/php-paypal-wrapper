@@ -136,7 +136,7 @@ if ($executePayment == false) {
 
 ### Currency Types Accepted:
 
-|  Currency Type       Code |
+|  Currency Type      | Code|
 |---------------------|-----|
 | Australian dollar   | AUD |
 | Brazilian real 2    | BRL |
