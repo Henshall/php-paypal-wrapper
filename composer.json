@@ -9,8 +9,7 @@
     }],
     "minimum-stability": "dev",
     "require": {
-        "paypal/rest-api-sdk-php": "^1.13",
-        "illuminate/session": "7.x-dev"
+        "paypal/rest-api-sdk-php": "^1.13"
     },
     "autoload": {
         "psr-4": {
