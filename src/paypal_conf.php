@@ -2,6 +2,8 @@
 return [
 'client_id' => 'PAYPAL_CLIENT_ID',
 'secret' => 'PAYPAL_CLIENT_SECRET',
+'return_url' => 'RETURN_URL',
+'cancel_url' => 'CANCEL_URL',
 /**
 * SDK configuration
 */
@@ -28,7 +30,8 @@ return [
 * Logging is most verbose in the 'FINE' level and decreases as you
 * proceed towards ERROR
 */
-'log.LogLevel' => 'FINE'
+'log.LogLevel' => 'FINE',
+
 ),
 ];
 ?>

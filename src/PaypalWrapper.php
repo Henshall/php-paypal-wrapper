@@ -5,22 +5,25 @@ namespace Henshall;
 use PayPal\Rest\ApiContext;
 use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Api\Amount;
-// use PayPal\Api\Details;
 use PayPal\Api\Item;
 use PayPal\Api\ItemList;
 use PayPal\Api\Payer;
 use PayPal\Api\Payment;
 use PayPal\Api\RedirectUrls;
-// use PayPal\Api\PaymentExecution;
+use PayPal\Api\PaymentExecution;
 use PayPal\Api\Transaction;
 
 class PaypalWrapper 
 {
     public $error = null;
     private $_api_context;
+    private $configFile;
+    private $param;
+    private $payment;
     
-    public function validateConfigFile($paypal_conf){
-        if ($this->error) {return $this->error;} 
+    public function validateConfigFile($paypal_conf)
+    {
+        if ($this->error) {return false;} 
         try {
             if (!$paypal_conf || $paypal_conf == null) {
                 throw new \Exception("ConfigFile does not exist", 1);
@@ -44,22 +47,48 @@ class PaypalWrapper
             ||  !isset($paypal_conf["settings"]["log.LogLevel"]) ) {
                 throw new \Exception("one of the necessary settings in the config file does not exist", 1);
             }
-            return $paypal_conf;
+            return true;
         } catch (\Exception $e) {
             $this->error = "validateConfigFile method failed: " . $e;
+            return false;
+        }
+    }
+    
+    public function setParam($param)
+    {
+        $this->param = $param;
+    }
+    
+    // Sets the config file so you can access settings such as your paypal client_secret and client_id
+    public function setConfigFile($paypal_conf)
+    {
+        if ($this->error) {return false;}
+        try {
+            $this->configFile = $paypal_conf;
+            $this->_api_context = new ApiContext(new OAuthTokenCredential($paypal_conf['client_id'], $paypal_conf['secret']));
+            $this->_api_context->setConfig($paypal_conf['settings']);
+        } catch (\Exception $e) {
+            $this->error = "setConfigFile method failed: " . $e;
             return $this->error;
         }
     }
     
-    // Sets the config file so you can access settings such as your paypal client_secret and client_id
-    public function setConfigFile($paypal_conf){
-        if ($this->error) {return $this->error;}
-        $this->_api_context = new ApiContext(new OAuthTokenCredential($paypal_conf['client_id'], $paypal_conf['secret']));
-        $this->_api_context->setConfig($paypal_conf['settings']);
+    public function setPayment($payer_id, $payment_id)
+    {
+        if ($this->error) {return false;} 
+        try {
+            $this->payment = Payment::get($payment_id, $this->_api_context);
+            $execution = new PaymentExecution();
+            $execution->setPayerId($payer_id);
+        } catch (\Exception $e) {
+            $this->error = "setPayment method failed: " . $e;
+            return false;
+        }
     }
     
-    public function payment($depositAmount)
+    public function RedirectToPaypal($depositAmount)
     {
+        if ($this->error) {return false;} 
         try {
             //CREATE PAYER
             $payer = new Payer();
@@ -87,8 +116,9 @@ class PaypalWrapper
             
             //CREATE RedirectUrls
             $redirect_urls = new RedirectUrls();
-            $redirect_urls->setReturnUrl(route('_payment_received')) /** Specify return URL **/
-            ->setCancelUrl(route('payment_received'));
+            $return_url = $this->configFile["return_url"] . "?param=$this->param";
+            $cancel_url = $this->configFile["cancel_url"] . "?param=$this->param";
+            $redirect_urls->setReturnUrl($return_url)->setCancelUrl($cancel_url);
             
             //CREATE Payment OBJECT
             $payment = new Payment();
@@ -96,6 +126,7 @@ class PaypalWrapper
             ->setPayer($payer)
             ->setRedirectUrls($redirect_urls)
             ->setTransactions(array($transaction));
+            
             $payment->create($this->_api_context);
             
             //GET LINKS
@@ -105,21 +136,30 @@ class PaypalWrapper
                     break;
                 }
             }
-            /** add payment paymentID to session **/
-            Session::put('paypal_callback', $payment->getId());
-            // if(isset($redirect_url)) {
-            //     /** redirect to paypal **/
-            //     return Redirect::away($redirect_url);
-            // }
-            // \Session::put('error','Unknown error occurred');
-            // return redirect(url('deposit'));
-            
+            /** redirect to paypal **/
+            header( "Location: $redirect_url");
+            exit;
         } catch (\Exception $e) {
-            $this->error = "Payment method failed: " . $e;
-            return $this->error;
-        }
+            $this->error = "RedirectToPaypal method failed: " . $e;
+            return false;
+        }    
     }
     
+    public function executePayment()
+    {
+        if ($this->error) {return false;} 
+        try {
+            $result = $this->payment->execute($execution, $this->_api_context);
+        } catch (\PayPal\Exception\PayPalConnectionException $e) {
+            $this->error = "executePayment method failed: " . $e;
+            return false;
+        }
+        if ($result->getState() == 'approved') {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 
 ?>
