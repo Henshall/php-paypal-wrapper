@@ -150,15 +150,16 @@ class PaypalWrapper
         if ($this->error) {return false;} 
         try {
             $result = $this->payment->execute($execution, $this->_api_context);
+            if ($result->getState() == 'approved') {
+                return true;
+            } else {
+                return false;
+            }
         } catch (\PayPal\Exception\PayPalConnectionException $e) {
             $this->error = "executePayment method failed: " . $e;
             return false;
         }
-        if ($result->getState() == 'approved') {
-            return true;
-        } else {
-            return false;
-        }
+        
     }
 }
 
