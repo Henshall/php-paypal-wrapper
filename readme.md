@@ -99,16 +99,17 @@ $paypalWrapper->setPayment($data["PayerID"], $data["paymentId"] );
 // EXECUTE THE PAYMENT
 $executePayment = $paypalWrapper->executePayment();
 
+if ($paypalWrapper->error) {
+    // Where to put your logic if there is an error with the wrapper itself, or its config
+}
+
 if ($executePayment == true) {
     // LOGIC FOR WHEN PAYMENT IS SUCCESSFUL
 }
+
 if ($executePayment == false) {
-    // LOGIC FOR WHEN PAYMENT IS NOT SUCCESSFUL
+    // LOGIC FOR WHEN PAYMENT IS NOT SUCCESSFUL (ex. insufficient funds, or blocked for some reason)
 }
-//PUT ERRORS BELOW
-if ($paypalWrapper->error) {
-    // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
-    // die($paypalWrapper->error);
-}
+
 ```
 
