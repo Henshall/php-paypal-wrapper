@@ -19,10 +19,10 @@ composer require henshall/php-paypal-wrapper
 ```php
 
 return [
-    'client_id' => env("PAYPAL_CLIENT_ID"),
-    'secret' => env("PAYPAL_SECRET"),
-    'return_url' => 'http://localhost:8000/payment_received',
-    'cancel_url' => 'http://localhost:8000/payment_received',
+    'client_id' => 'PAYPAL_CLIENT_ID',
+    'secret' => 'PAYPAL_CLIENT_SECRET',
+    'return_url' => 'RETURN_URL',
+    'cancel_url' => 'CANCEL_URL',
     /**
     * SDK configuration
     */
