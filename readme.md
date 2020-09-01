@@ -82,6 +82,14 @@ if ($paypalWrapper->error) {
     // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
     // die($paypalWrapper->error);
 }
+
+
+//NOTE you can also check if any of the individual functions fail by see if they return false. 
+// $setConfig = $paypalWrapper->setConfigFile($config);
+// if (!$setConfig) {
+//     // LOGIC IF FAILED TO SET CONFIG
+// }
+
 ```
 
 

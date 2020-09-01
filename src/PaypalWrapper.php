@@ -57,6 +57,7 @@ class PaypalWrapper
     public function setParam($param)
     {
         $this->param = $param;
+        return true;
     }
     
     // Sets the config file so you can access settings such as your paypal client_secret and client_id
@@ -67,9 +68,10 @@ class PaypalWrapper
             $this->configFile = $paypal_conf;
             $this->_api_context = new ApiContext(new OAuthTokenCredential($paypal_conf['client_id'], $paypal_conf['secret']));
             $this->_api_context->setConfig($paypal_conf['settings']);
+            return true;
         } catch (\Exception $e) {
             $this->error = "setConfigFile method failed: " . $e;
-            return $this->error;
+            return false;
         }
     }
     
@@ -80,6 +82,7 @@ class PaypalWrapper
             $this->payment = Payment::get($payment_id, $this->_api_context);
             $execution = new PaymentExecution();
             $execution->setPayerId($payer_id);
+            return true;
         } catch (\Exception $e) {
             $this->error = "setPayment method failed: " . $e;
             return false;
