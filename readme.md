@@ -19,10 +19,23 @@ composer require henshall/php-paypal-wrapper
 ```php
 
 return [
-    'client_id' => 'PAYPAL_CLIENT_ID',  // get from https://developer.paypal.com
-    'secret' => 'PAYPAL_CLIENT_SECRET', // get from https://developer.paypal.com
-    'return_url' => 'RETURN_URL', // after a user authorizes the payment, they will be directed to this url. This is where we will place the logic from step 2 below.
-    'cancel_url' => 'CANCEL_URL', // url the user is sent to if they cancel the transaction. Maybe you can bring the user back to your homepage with a message saying they cancelled the transaction.
+    
+    /**
+    * get from https://developer.paypal.com
+    */
+    'client_id' => 'PAYPAL_CLIENT_ID',
+    /**
+    * get from https://developer.paypal.com
+    */ 
+    'secret' => 'PAYPAL_CLIENT_SECRET', 
+    /**
+    * after a user authorizes the payment, they will be directed to this url. This is where we will place the logic from step 2 below.
+    */
+    'return_url' => 'RETURN_URL',
+    /**
+    * // url the user is sent to if they cancel the transaction. Maybe you can bring the user back to your homepage with a message saying they cancelled the transaction.
+    */
+    'cancel_url' => 'CANCEL_URL', 
     /**
     * SDK configuration
     */
@@ -68,15 +81,15 @@ A user click "pay" on your website, and you send a get/post request to the backe
 ### Step 2.
 In the pay.php file, or wherever you redirected them to, you will have the code below. This code will redirect them to paypals website where they will log in, and authorize the payment. 
 ```php
-// CREATE THE CLASS
+// Create the class
 $paypalWrapper = new PaypalWrapper;
-// SET THE CONFIG FILE AS SHOWN ABOVE IN THE Pre-requisites SECTION
+// Set the config file as shown above in the prerequisites section
 $config = config('paypal_conf');
 $validate = $paypalWrapper->validateConfigFile($config);
 $paypalWrapper->setConfigFile($config);
-// SET A PARAM - HERE YOU CAN SET A USER ID, NAME, OR EMAIL TO KNOW WHO HAS PAID
+// Set a Parameter - Here you can set a user_id, name, or email address to track which user has paid.
 $paypalWrapper->setParam("useremail@email.com");
-// SET THE AMOUNT YOU WANT THEM TO PAY
+// Set the amount and the currency type (currency examples below)
 $paypalWrapper->RedirectToPaypal(100, "USD");
 if ($paypalWrapper->error) {
     // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
@@ -96,15 +109,15 @@ if ($paypalWrapper->error) {
 ### Step 3.
 Once they authorize the payment, they will be redirected back to your website according to the 'redirect_url' variable you set in the config file. They will pass along two parameters: 1) PayerId 2) paymentID  - we will need these parameters in order to execute the payment.
 ```php
-// CREATE THE CLASS
+// Create the class
 $paypalWrapper = new PaypalWrapper;
-// SET THE CONFIG FILE AS SHOWN ABOVE IN THE Pre-requisites SECTION
+// Set the config file as shown above in the prerequisites section
 $config = config('paypal_conf');
 $validate = $paypalWrapper->validateConfigFile($config); 
 $paypalWrapper->setConfigFile($config);
-// SET THE PAYMENT
+// Set the payment
 $paypalWrapper->setPayment($data["PayerID"], $data["paymentId"] );
-// EXECUTE THE PAYMENT
+// Execute the payment
 $executePayment = $paypalWrapper->executePayment();
 
 if ($paypalWrapper->error) {
@@ -112,42 +125,32 @@ if ($paypalWrapper->error) {
 }
 
 if ($executePayment == true) {
-    // LOGIC FOR WHEN PAYMENT IS SUCCESSFUL
+    // write code for when payment is successful
 }
 
 if ($executePayment == false) {
-    // LOGIC FOR WHEN PAYMENT IS NOT SUCCESSFUL (ex. insufficient funds, or blocked for some reason)
+    // write code for when payment is NOT successful (ex. insufficient funds, or blocked for some reason)
 }
 
 ```
 
 ### Currency Types Accepted:
 
-Australian dollar AUD
-Brazilian real 2 BRL
-Canadian dollar	CAD
-Chinese Renmenbi 4 CNY
-Czech koruna CZK
-Danish krone DKK
-Euro	EUR
-Hong Kong dollar HKD
-Hungarian forint 1	HUF
-Indian rupee 3	INR
-Israeli new shekel	ILS
-Japanese yen 1	JPY
-Malaysian ringgit 4	MYR
-Mexican peso	MXN
-New Taiwan dollar 1	TWD
-New Zealand dollar	NZD
-Norwegian krone	NOK
-Philippine peso	PHP
-Polish złoty	PLN
-Pound sterling	GBP
-Russian ruble	RUB
-Singapore dollar SGD
-Swedish krona	SEK
-Swiss franc	CHF
-Thai baht	THB
-United States dollar USD
+|  Currency Type       Code |
+|---------------------|-----|
+| Australian dollar   | AUD |
+| Brazilian real 2    | BRL |
+| Canadian dollar     | CAD |
+| Chinese Renmenbi 4  | CNY |
+| Czech koruna        | CZK |
+| Danish krone        | DKK |
+| Euro                | EUR |
+| Hong Kong dollar    | HKD |
+| Hungarian forint 1  | HUF |
+| Indian rupee 3      | INR |
+| Israeli new shekel  | ILS |
+| Japanese yen 1      | JPY |
+| Malaysian ringgit 4 | MYR |
+| Mexican peso        | MXN |
 
 
