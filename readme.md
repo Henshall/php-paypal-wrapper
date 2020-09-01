@@ -86,7 +86,7 @@ if ($paypalWrapper->error) {
 
 
 ### Step 3.
-Once they authorize the payment, they will be redirected back to your website according to the 'redirect_url' variable you set in the config file. We can then execute the code.
+Once they authorize the payment, they will be redirected back to your website according to the 'redirect_url' variable you set in the config file. They will pass along two parameters: 1) PayerId 2) paymentID  - we will need these parameters in order to execute the payment.
 ```php
 // CREATE THE CLASS
 $paypalWrapper = new PaypalWrapper;
