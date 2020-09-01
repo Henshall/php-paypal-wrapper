@@ -77,7 +77,7 @@ $paypalWrapper->setConfigFile($config);
 // SET A PARAM - HERE YOU CAN SET A USER ID, NAME, OR EMAIL TO KNOW WHO HAS PAID
 $paypalWrapper->setParam("useremail@email.com");
 // SET THE AMOUNT YOU WANT THEM TO PAY
-$paypalWrapper->RedirectToPaypal(100);
+$paypalWrapper->RedirectToPaypal(100, "USD");
 if ($paypalWrapper->error) {
     // Where to put your logic if there is an error. (Save error to DB, or log file, or email to yourself etc.)
     // die($paypalWrapper->error);

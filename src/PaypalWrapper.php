@@ -89,7 +89,7 @@ class PaypalWrapper
         }
     }
     
-    public function RedirectToPaypal($depositAmount)
+    public function RedirectToPaypal($depositAmount, $currency)
     {
         if ($this->error) {return false;} 
         try {
@@ -98,7 +98,7 @@ class PaypalWrapper
             $payer->setPaymentMethod('paypal');
             $item_temp = new Item();
             $item_temp->setName("Deposit")
-            ->setCurrency('USD')
+            ->setCurrency($currency)
             ->setQuantity(1)
             ->setPrice($depositAmount);
             
@@ -108,7 +108,7 @@ class PaypalWrapper
             
             //CREATE Amount
             $amount = new Amount();
-            $amount->setCurrency('USD')
+            $amount->setCurrency($currency)
             ->setTotal($depositAmount);
             
             //CREATE Transaction
