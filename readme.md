@@ -5,7 +5,7 @@ This is a wrapper for the Paypals PHP Package 'paypal/rest-api-sdk-php'.
 
 Working with Paypal can be an extremely frustrating experience. Their sandbox doesn't always work, their documentation is outdated or redundant, and they are very quick to ban and freeze your account if they don't like any of the transactions (ex. monetary amount too high). 
 
-I want to create a wrapper with some basic documentation so that users can accept payments as soon as possible. The following package lets users send a payment to your paypal account, and allows parameters to be sent along (such as user id's) so that you can easily track who has paid, so that you can upgrade their account, or send a product to them, or whatever else you need to do. 
+I want to create a wrapper with some basic documentation so that users can accept payments as soon as possible. The following package lets users send a payment to your Paypal account, and allows parameters to be sent along (such as user id's) so that you can easily track who has paid, so that you can upgrade their account, or send a product to them, or whatever else you need to do. 
 
 
 ## Installation with Composer:
@@ -14,15 +14,15 @@ composer require henshall/php-paypal-wrapper
 ```
 
 ## Pre-requisites
-- Obtain Paypal Client ID / Secret. 
-- Copy the following config file into your project:
+- Obtain Paypal Client ID / Secret at https://developer.paypal.com
+- Place the following config file somewhere into your code, and change the settings to match your application.
 ```php
 
 return [
-    'client_id' => 'PAYPAL_CLIENT_ID',
-    'secret' => 'PAYPAL_CLIENT_SECRET',
-    'return_url' => 'RETURN_URL',
-    'cancel_url' => 'CANCEL_URL',
+    'client_id' => 'PAYPAL_CLIENT_ID',  // get from https://developer.paypal.com
+    'secret' => 'PAYPAL_CLIENT_SECRET', // get from https://developer.paypal.com
+    'return_url' => 'RETURN_URL', // after a user authorizes the payment, they will be directed to this url. This is where we will place the logic from step 2 below.
+    'cancel_url' => 'CANCEL_URL', // url the user is sent to if they cancel the transaction. Maybe you can bring the user back to your homepage with a message saying they cancelled the transaction.
     /**
     * SDK configuration
     */
@@ -30,7 +30,7 @@ return [
         /**
         * Available option 'sandbox' or 'live'
         */
-        'mode' => "sandbox",
+        'mode' => "sandbox",  // make sure to change this to live!
         /**
         * Specify the max request time in seconds
         */
@@ -100,7 +100,7 @@ Once they authorize the payment, they will be redirected back to your website ac
 $paypalWrapper = new PaypalWrapper;
 // SET THE CONFIG FILE AS SHOWN ABOVE IN THE Pre-requisites SECTION
 $config = config('paypal_conf');
-$validate = $paypalWrapper->validateConfigFile($config);
+$validate = $paypalWrapper->validateConfigFile($config); 
 $paypalWrapper->setConfigFile($config);
 // SET THE PAYMENT
 $paypalWrapper->setPayment($data["PayerID"], $data["paymentId"] );
@@ -120,4 +120,34 @@ if ($executePayment == false) {
 }
 
 ```
+
+### Currency Types Accepted:
+
+Australian dollar AUD
+Brazilian real 2 BRL
+Canadian dollar	CAD
+Chinese Renmenbi 4 CNY
+Czech koruna CZK
+Danish krone DKK
+Euro	EUR
+Hong Kong dollar HKD
+Hungarian forint 1	HUF
+Indian rupee 3	INR
+Israeli new shekel	ILS
+Japanese yen 1	JPY
+Malaysian ringgit 4	MYR
+Mexican peso	MXN
+New Taiwan dollar 1	TWD
+New Zealand dollar	NZD
+Norwegian krone	NOK
+Philippine peso	PHP
+Polish złoty	PLN
+Pound sterling	GBP
+Russian ruble	RUB
+Singapore dollar SGD
+Swedish krona	SEK
+Swiss franc	CHF
+Thai baht	THB
+United States dollar USD
+
 
