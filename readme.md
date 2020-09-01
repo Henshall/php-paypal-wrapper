@@ -1,4 +1,4 @@
-# Stripe Paypal Wrapper
+# PHP Paypal Wrapper
 ## Version: 1.0.0
 
 This is a wrapper for the Paypals PHP Package 'paypal/rest-api-sdk-php'.
